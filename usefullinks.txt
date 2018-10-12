@@ -1,0 +1,4 @@
+http://www.cbmhardware.de/show.php?r=4&id=9
+http://sta.c64.org/cbm64basconv.html
+http://codebase64.org/doku.php?id=base:kernal_floating_point_mathematics
+

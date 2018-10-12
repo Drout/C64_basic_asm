@@ -1,0 +1,122 @@
+00001  0000             FACX       = $61 ;EXPONENT
+00002  0001             FAC        = $62 ;MANTISSA - $65
+00003  0001             ;         $66 ;SIGN, IN MSB
+00004  0001             ARGX       = $69 ;EXPONENT
+00005  0001             ARG        = $6A ;MANTISSA - $6D
+00006  0001             ;         $6E ;SIGN, IN MSB
+00007  0001             SGNCMP     = $6F
+00008  0001                        
+00009  0001             RES8       = $FB ;LOBYTE OF PRODUCT
+00010  0001                        
+00011  0001             ;BASIC SUBROUTINES
+00012  0001             PRINTFAC   = $AABC
+00013  0001             VARTOFAC   = $BBA2 ;A/Y, LO/HI
+00014  0001             VARTOARG   = $BA8C
+00015  0001             FACTOVAR   = $BBD4
+00016  0001             FACADD     = $B867
+00017  0001             FACDIV     = $BB0F
+00018  0001             *=$1000
+00019  1000             
+00020  1000  20 FD AE              JSR $AEFD ; CHECK FOR COMMA
+00021  1003  20 9E B7              JSR $B79E ; GET 8-BIT PARAMETER INTO X
+00022  1006  8E 00 12              STX $1200
+00023  1009  60                    RTS
+00024  100A             
+00025  100A  A2 83      SQRT       LDX #<VALUE
+00026  100C  A0 10                 LDY #>VALUE
+00027  100E  20 D4 BB              JSR FACTOVAR
+00028  1011  AD 84 10              LDA VALUE+1
+00029  1014  30 5C                 BMI ERROR       ;NO NEGATIVE SQUARE ROOT
+00030  1016  AD 83 10              LDA VALUE
+00031  1019  F0 56                 BEQ DONE        ;ROOT OF 0 IS 0
+00032  101B                        
+00033  101B  A0 00                 LDY #$00        ;FILL TEMP RESULT WITH 0
+00034  101D  8C 89 10              STY RESULT+1
+00035  1020  8C 8A 10              STY RESULT+2
+00036  1023  8C 8B 10              STY RESULT+3
+00037  1026  8C 8C 10              STY RESULT+4
+00038  1029                        
+00039  1029  AD 83 10              LDA VALUE       ;GET GUESS BASED ON ARGUMENT
+00040  102C  18                    CLC
+00041  102D  6A                    ROR
+00042  102E  B0 05                 BCS SQRTADD
+00043  1030  A2 80                 LDX #$80
+00044  1032  8E 89 10              STX RESULT+1
+00045  1035  69 40      SQRTADD    ADC #$40
+00046  1037  8D 88 10              STA RESULT
+00047  103A  AD 84 10              LDA VALUE+1
+00048  103D  0D 89 10              ORA RESULT+1
+00049  1040  4A                    LSR
+00050  1041  4A                    LSR
+00051  1042  4A                    LSR
+00052  1043  4A                    LSR
+00053  1044  AA                    TAX
+00054  1045  BD 73 10              LDA SQRTTABLE,X
+00055  1048  8D 89 10              STA RESULT+1
+00056  104B  A9 04                 LDA #04         ;4 ITERATIONS OF NEWTON'S METHOD
+00057  104D  85 FB                 STA $FB
+00058  104F  A9 88                 LDA #<RESULT
+00059  1051  A0 10                 LDY #>RESULT
+00060  1053  20 A2 BB              JSR VARTOFAC
+00061  1056  A9 83      LOOP       LDA #<VALUE
+00062  1058  A0 10                 LDY #>VALUE
+00063  105A  20 0F BB              JSR FACDIV
+00064  105D  A9 88                 LDA #<RESULT
+00065  105F  A0 10                 LDY #>RESULT
+00066  1061  20 67 B8              JSR FACADD
+00067  1064  C6 61                 DEC $61
+00068  1066  A2 88                 LDX #<RESULT
+00069  1068  A0 10                 LDY #>RESULT
+00070  106A  20 D4 BB              JSR FACTOVAR
+00071  106D  C6 FB                 DEC $FB
+00072  106F  D0 E5                 BNE LOOP
+00073  1071  60         DONE       RTS
+00074  1072                        
+00075  1072  60         ERROR      RTS
+00076  1073                        
+00077  1073             SQRTTABLE
+00078  1073  03 0B 12              BYTE 03,11,18,25,32,38,44,50
+00079  107B  3A 45 4F              BYTE 58,69,79,89,98,107,115,123
+00080  1083             
+00081  1083  82 49 B2   VALUE      BYTE $82,$49,$B2,$6C,$9C ;3.15151515
+00082  1088  00 00 00   RESULT     BYTE $00,$00,$00,$00,$00 ;0
+00083  108D             
+
+******* 8 Label(s) *******
+done = $1071 
+error = $1072 
+loop = $1056 
+result = $1088 
+sqrt = $100A 
+sqrtadd = $1035 
+sqrttable = $1073 
+value = $1083 
+
+******* 1 Unused label(s) *******
+sqrt
+
+******* 13 Variable(s) *******
+ARG  = $006A
+ARGX  = $0069
+FAC  = $0062
+FACadd  = $B867
+FACdiv  = $BB0F
+FACtoVAR  = $BBD4
+FACX  = $0061
+PRINTFAC  = $AABC
+res8  = $00FB
+SGNCMP  = $006F
+tgt_c64  = $0001
+VARtoARG  = $BA8C
+VARtoFAC  = $BBA2
+******* 9 Unused variables(s) *******
+ARG
+ARGX
+FAC
+FACX
+PRINTFAC
+res8
+SGNCMP
+tgt_c64
+VARtoARG
+

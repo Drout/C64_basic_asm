@@ -1,0 +1,13 @@
+
+******* 2 Label(s) *******
+result = $1017 
+start = $1000 
+
+******* 1 Unused label(s) *******
+start
+
+******* 1 Variable(s) *******
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+

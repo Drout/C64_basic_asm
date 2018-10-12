@@ -1,0 +1,16 @@
+00001  0000             *=$1000    
+00002  1000  20 FD AE              JSR $AEFD ; CHECK FOR COMMA
+00003  1003  20 9E B7              JSR $B79E ; GET 8-BIT PARAMETER INTO X
+00004  1006  8E 00 12              STX $1200
+00005  1009  60                    RTS
+00006  100A             
+
+******* 0 Label(s) *******
+
+******* 0 Unused label(s) *******
+
+******* 1 Variable(s) *******
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+

@@ -1,0 +1,117 @@
+00001  0000             FACX       = $61 ;EXPONENT
+00002  0001             FAC        = $62 ;MANTISSA - $65
+00003  0001             ;         $66 ;SIGN, IN MSB
+00004  0001             ARGX       = $69 ;EXPONENT
+00005  0001             ARG        = $6A ;MANTISSA - $6D
+00006  0001             ;         $6E ;SIGN, IN MSB
+00007  0001             SGNCMP     = $6F
+00008  0001                        
+00009  0001             RES8       = $FB ;LOBYTE OF PRODUCT
+00010  0001                        
+00011  0001             ;BASIC SUBROUTINES
+00012  0001             PRINTFAC   = $AABC
+00013  0001             VARTOFAC   = $BBA2 ;A/Y, LO/HI
+00014  0001             VARTOARG   = $BA8C
+00015  0001             FACTOVAR   = $BBD4
+00016  0001             FACADD     = $B867
+00017  0001             FACDIV     = $BB0F
+00018  0001             *=$2000
+00019  2000             
+00020  2000  A2 79      SQRT       LDX #<VALUE
+00021  2002  A0 20                 LDY #>VALUE
+00022  2004  20 D4 BB              JSR FACTOVAR
+00023  2007  AD 7A 20              LDA VALUE+1
+00024  200A  30 5C                 BMI ERROR       ;NO NEGATIVE SQUARE ROOT
+00025  200C  AD 79 20              LDA VALUE
+00026  200F  F0 56                 BEQ DONE        ;ROOT OF 0 IS 0
+00027  2011                        
+00028  2011  A0 00                 LDY #$00        ;FILL TEMP RESULT WITH 0
+00029  2013  8C 7F 20              STY RESULT+1
+00030  2016  8C 80 20              STY RESULT+2
+00031  2019  8C 81 20              STY RESULT+3
+00032  201C  8C 82 20              STY RESULT+4
+00033  201F                        
+00034  201F  AD 79 20              LDA VALUE       ;GET GUESS BASED ON ARGUMENT
+00035  2022  18                    CLC
+00036  2023  6A                    ROR
+00037  2024  B0 05                 BCS SQRTADD
+00038  2026  A2 80                 LDX #$80
+00039  2028  8E 7F 20              STX RESULT+1
+00040  202B  69 40      SQRTADD    ADC #$40
+00041  202D  8D 7E 20              STA RESULT
+00042  2030  AD 7A 20              LDA VALUE+1
+00043  2033  0D 7F 20              ORA RESULT+1
+00044  2036  4A                    LSR
+00045  2037  4A                    LSR
+00046  2038  4A                    LSR
+00047  2039  4A                    LSR
+00048  203A  AA                    TAX
+00049  203B  BD 69 20              LDA SQRTTABLE,X
+00050  203E  8D 7F 20              STA RESULT+1
+00051  2041  A9 04                 LDA #04         ;4 ITERATIONS OF NEWTON'S METHOD
+00052  2043  85 FB                 STA $FB
+00053  2045  A9 7E                 LDA #<RESULT
+00054  2047  A0 20                 LDY #>RESULT
+00055  2049  20 A2 BB              JSR VARTOFAC
+00056  204C  A9 79      LOOP       LDA #<VALUE
+00057  204E  A0 20                 LDY #>VALUE
+00058  2050  20 0F BB              JSR FACDIV
+00059  2053  A9 7E                 LDA #<RESULT
+00060  2055  A0 20                 LDY #>RESULT
+00061  2057  20 67 B8              JSR FACADD
+00062  205A  C6 61                 DEC $61
+00063  205C  A2 7E                 LDX #<RESULT
+00064  205E  A0 20                 LDY #>RESULT
+00065  2060  20 D4 BB              JSR FACTOVAR
+00066  2063  C6 FB                 DEC $FB
+00067  2065  D0 E5                 BNE LOOP
+00068  2067  60         DONE       RTS
+00069  2068                        
+00070  2068  60         ERROR      RTS
+00071  2069                        
+00072  2069             SQRTTABLE
+00073  2069  03 0B 12              BYTE 03,11,18,25,32,38,44,50
+00074  2071  3A 45 4F              BYTE 58,69,79,89,98,107,115,123
+00075  2079             
+00076  2079  82 49 B2   VALUE      BYTE $82,$49,$B2,$6C,$9C ;3.15151515
+00077  207E  00 00 00   RESULT     BYTE $00,$00,$00,$00,$00 ;0
+00078  2083             
+
+******* 8 Label(s) *******
+done = $2067 
+error = $2068 
+loop = $204C 
+result = $207E 
+sqrt = $2000 
+sqrtadd = $202B 
+sqrttable = $2069 
+value = $2079 
+
+******* 1 Unused label(s) *******
+sqrt
+
+******* 13 Variable(s) *******
+ARG  = $006A
+ARGX  = $0069
+FAC  = $0062
+FACadd  = $B867
+FACdiv  = $BB0F
+FACtoVAR  = $BBD4
+FACX  = $0061
+PRINTFAC  = $AABC
+res8  = $00FB
+SGNCMP  = $006F
+tgt_plus4  = $0001
+VARtoARG  = $BA8C
+VARtoFAC  = $BBA2
+******* 9 Unused variables(s) *******
+ARG
+ARGX
+FAC
+FACX
+PRINTFAC
+res8
+SGNCMP
+tgt_plus4
+VARtoARG
+

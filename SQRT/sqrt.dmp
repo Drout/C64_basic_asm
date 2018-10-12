@@ -1,0 +1,40 @@
+
+******* 9 Label(s) *******
+done = $1086 
+error = $1087 
+loop = $1062 
+resaddr = $10A2 
+result = $109D 
+sqrt = $1000 
+sqrtadd = $1041 
+sqrttable = $1088 
+value = $1098 
+
+******* 1 Unused label(s) *******
+sqrt
+
+******* 13 Variable(s) *******
+ARG  = $006A
+ARGX  = $0069
+FAC  = $0062
+FACadd  = $B867
+FACdiv  = $BB0F
+FACtoVAR  = $BBD4
+FACX  = $0061
+PRINTFAC  = $AABC
+res8  = $00FB
+SGNCMP  = $006F
+tgt_c64  = $0001
+VARtoARG  = $BA8C
+VARtoFAC  = $BBA2
+******* 9 Unused variables(s) *******
+ARG
+ARGX
+FAC
+FACX
+PRINTFAC
+res8
+SGNCMP
+tgt_c64
+VARtoARG
+
